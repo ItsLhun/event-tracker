@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { ListItem, styled, Typography } from '@mui/material';
+import { ListItem, styled, Typography, useTheme } from '@mui/material';
 import React from 'react';
 
 const backgroundColor = (props) => {
@@ -28,14 +27,14 @@ const StyliedListItem = styled(ListItem)((props) => ({
   display: 'flex',
   flexDirection: 'column',
   marginBottom: '1rem',
-  padding: '1rem',
   position: 'relative',
   width: '100%'
 }));
 
 const Notification = (props) => {
+  const theme = useTheme();
   return (
-    <StyliedListItem alertData={props.alertData}>
+    <StyliedListItem alertData={props.alertData} theme={theme}>
       <Typography variant="h5" component="h2">
         {props.alertData.title}
       </Typography>

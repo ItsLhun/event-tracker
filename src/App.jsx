@@ -5,9 +5,7 @@ import styled from 'styled-components';
 import Navbar from './components/Navbar/Navbar';
 import { Box, Select, ThemeProvider } from '@mui/material';
 import theme from 'theme';
-
-// you may decrease this if you're feeling brave!
-const INTERVAL_DURATION = 2600;
+import Topbar from 'components/Topbar/Topbar';
 
 const DebugNav = styled.nav`
   position: absolute;
@@ -31,50 +29,51 @@ export default function App() {
   const interval = useRef(null);
 
   // clear the alert stream
-  function handleClearTapped() {
-    setItems([]);
-  }
+  // function handleClearTapped() {
+  //   setItems([]);
+  // }
 
   // start the alert stream
-  function handleStartTapped() {
-    if (!interval.current) {
-      setIsRunning(true);
-      interval.current = createAlertStream({
-        onNewAlert: setItems,
-        intervalDuration: INTERVAL_DURATION
-      });
-    }
-  }
+  // function handleStartTapped() {
+  //   if (!interval.current) {
+  //     setIsRunning(true);
+  //     interval.current = createAlertStream({
+  //       onNewAlert: setItems,
+  //       intervalDuration: INTERVAL_DURATION
+  //     });
+  //   }
+  // }
 
   // stop the alert stream
-  function handleStopTapped() {
-    if (interval.current) {
-      interval.current();
-      interval.current = null;
-      setIsRunning(false);
-    }
-  }
+  // function handleStopTapped() {
+  //   if (interval.current) {
+  //     interval.current();
+  //     interval.current = null;
+  //     setIsRunning(false);
+  //   }
+  // }
 
   const toggleFilter = () => {
     setShowFilter(!showFilter);
   };
 
   // start the alert stream on mount
-  useEffect(() => {
-    if (!interval.current) {
-      interval.current = createAlertStream({
-        onNewAlert: setItems,
-        intervalDuration: INTERVAL_DURATION
-      });
-      setIsRunning(true);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!interval.current) {
+  //     interval.current = createAlertStream({
+  //       onNewAlert: setItems,
+  //       intervalDuration: INTERVAL_DURATION
+  //     });
+  //     setIsRunning(true);
+  //   }
+  // }, []);
 
   return (
     <ThemeProvider theme={theme}>
       <Box display="flex" flexDirection="column" height={'100%'}>
         <Box flexGrow={1} overflow="auto">
-          <Box marginBottom={'50px'}>
+          <Topbar items={items} setItems={setItems} />
+          {/* <Box marginBottom={'50px'}>
             <DebugNav>
               <button disabled={isRunning} onClick={handleStartTapped}>
                 start
@@ -86,7 +85,7 @@ export default function App() {
                 clear
               </button>
             </DebugNav>
-          </Box>
+          </Box> */}
 
           <AlertStream data={items} />
         </Box>
@@ -100,7 +99,7 @@ export default function App() {
             </Select>
           </Box>
         )}
-        <Navbar filterClick={toggleFilter} />
+        <Navbar />
       </Box>
     </ThemeProvider>
   );
