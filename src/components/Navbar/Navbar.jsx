@@ -4,6 +4,7 @@ import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import HomeIcon from '@mui/icons-material/Home';
 import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
 import { styled } from '@mui/material/styles';
+import { Filter } from '@mui/icons-material';
 
 // Navbar using Material UI
 
@@ -21,7 +22,7 @@ const ActionStyles = styled(BottomNavigationAction)(({ theme }) => ({
   }
 }));
 
-const Navbar = () => {
+const Navbar = (props) => {
   const [value, setValue] = React.useState(0);
 
   return (
@@ -34,6 +35,11 @@ const Navbar = () => {
     >
       <ActionStyles label="Home" icon={<HomeIcon />} />
       <ActionStyles label="History" icon={<ManageHistoryIcon />} />
+      <ActionStyles
+        label="Filter"
+        icon={<Filter />}
+        onClick={props.filterClick}
+      />
     </NavbarStyles>
   );
 };

@@ -3,7 +3,7 @@ import AlertStream from './components/AlertStream';
 import { createAlertStream } from './utils';
 import styled from 'styled-components';
 import Navbar from './components/Navbar/Navbar';
-import { Box, ThemeProvider } from '@mui/material';
+import { Box, Select, ThemeProvider } from '@mui/material';
 import theme from 'theme';
 
 // you may decrease this if you're feeling brave!
@@ -25,6 +25,8 @@ const BriefWrap = styled.div`
 
 export default function App() {
   const [items, setItems] = useState([]);
+  const [displayedItems, setDisplayedItems] = useState([]);
+  const [showFilter, setShowFilter] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const interval = useRef(null);
 
@@ -52,6 +54,10 @@ export default function App() {
       setIsRunning(false);
     }
   }
+
+  const toggleFilter = () => {
+    setShowFilter(!showFilter);
+  };
 
   // start the alert stream on mount
   useEffect(() => {
@@ -84,7 +90,17 @@ export default function App() {
 
           <AlertStream data={items} />
         </Box>
-        <Navbar />
+        {/* Filter */}
+        {showFilter && (
+          <Box>
+            <Select>
+              <option value="all">All</option>
+              <option value="mechanical">Mechanical</option>
+              <option value="software">Software</option>
+            </Select>
+          </Box>
+        )}
+        <Navbar filterClick={toggleFilter} />
       </Box>
     </ThemeProvider>
   );
