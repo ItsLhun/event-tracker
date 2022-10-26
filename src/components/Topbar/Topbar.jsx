@@ -1,34 +1,41 @@
 import React, { useRef, useEffect, useState } from 'react';
-import BottomNavigation from '@mui/material/BottomNavigation';
-import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+
+import FilterListIcon from '@mui/icons-material/FilterList';
+import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import StopCircleIcon from '@mui/icons-material/StopCircle';
+import ClearIcon from '@mui/icons-material/Clear';
 
 import { styled } from '@mui/material/styles';
 import { Box } from '@mui/system';
 import { createAlertStream } from 'utils';
+import {
+  AppBar,
+  Button,
+  CardContent,
+  Collapse,
+  IconButton
+} from '@mui/material';
 
 // you may decrease this if you're feeling brave!
-const INTERVAL_DURATION = 2600;
+const INTERVAL_DURATION = 1000;
 
 // Topbar using Material UI
 
-const TopbarStyles = styled(BottomNavigation)(({ theme }) => ({
-  flexShrink: 0,
-  backgroundColor: theme.palette.primary.main
+const TopbarStyles = styled(AppBar)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main,
+  position: 'relative'
 }));
 
-const ActionStyles = styled(BottomNavigationAction)(({ theme }) => ({
+const ToggleButtonStyled = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
-
-  '&.Mui-selected': {
-    color: theme.palette.secondary.main,
-    backgroundColor: theme.palette.primary.contrastText
-  }
+  backgroundColor: 'black'
 }));
 
 const Topbar = (props) => {
   const [value, setValue] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const interval = useRef(null);
+  const [expanded, setExpanded] = React.useState(false);
 
   // clear the alert stream
   function handleClearTapped() {
@@ -55,6 +62,10 @@ const Topbar = (props) => {
     }
   }
 
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+
   // start the alert stream on mount
   useEffect(() => {
     if (!interval.current) {
@@ -67,26 +78,57 @@ const Topbar = (props) => {
   }, []);
 
   return (
-    <TopbarStyles
-      showLabels
-      value={value}
-      onChange={(event, newValue) => {
-        setValue(newValue);
-      }}
-    >
-      <Box marginBottom={'50px'}>
-        <Box position={'absolute'} top={'0px'} left={'0px'}>
-          <button disabled={isRunning} onClick={handleStartTapped}>
-            start
-          </button>
-          <button disabled={!isRunning} onClick={handleStopTapped}>
-            stop
-          </button>
-          <button disabled={!props.items.length} onClick={handleClearTapped}>
-            clear
-          </button>
-        </Box>
+    <TopbarStyles>
+      <Box>
+        <IconButton
+          size="large"
+          edge="start"
+          color="inherit"
+          sx={{ mr: 2 }}
+          aria-label="start"
+          disabled={isRunning}
+          onClick={handleStartTapped}
+        >
+          <PlayCircleOutlineIcon /> Start
+        </IconButton>
+        <IconButton
+          size="large"
+          edge="start"
+          color="inherit"
+          sx={{ mr: 2 }}
+          aria-label="stop"
+          disabled={!isRunning}
+          onClick={handleStopTapped}
+        >
+          <StopCircleIcon /> Stop
+        </IconButton>
+        <IconButton
+          size="large"
+          edge="start"
+          color="inherit"
+          sx={{ mr: 2 }}
+          aria-label="clear"
+          disabled={!props.items.length}
+          onClick={handleClearTapped}
+        >
+          <ClearIcon /> Clear
+        </IconButton>
       </Box>
+      <IconButton
+        size="large"
+        edge="start"
+        color="inherit"
+        sx={{ mr: 2 }}
+        onClick={handleExpandClick}
+        aria-expanded={expanded}
+        aria-label="filter"
+      >
+        <FilterListIcon />
+      </IconButton>
+
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <CardContent>lorem ipsum</CardContent>
+      </Collapse>
     </TopbarStyles>
   );
 };

@@ -1,47 +1,104 @@
-import { ListItem, styled, Typography, useTheme } from '@mui/material';
+import {
+  Backdrop,
+  Box,
+  Fade,
+  Icon,
+  IconButton,
+  ListItem,
+  Modal,
+  styled,
+  Typography,
+  useTheme
+} from '@mui/material';
+import VisualSeverity from 'components/VisualSeverity/VisualSeverity';
 import React from 'react';
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import TypeIcons from 'components/TypeIcons/TypeIcons';
 
-const backgroundColor = (props) => {
-  const { severity } = props;
+// IBM severity levels
+// https://www.color-hex.com/color-palette/33993
+const severityBackgroundColor = (severity) => {
   switch (severity) {
     case 1:
-      return '#ff0000';
+      return '#00ac46';
     case 2:
-      return '#ff6600';
+      return '#fdc500';
     case 3:
-      return '#ffcc00';
+      return '#fd8c00';
     case 4:
-      return '#99ff00';
+      return '#dc0000';
     case 5:
-      return '#00ff00';
+      return '#780000';
     default:
-      return '#ff0000';
+      return '#780000';
   }
 };
 
-const StyliedListItem = styled(ListItem)((props) => ({
-  // backgroundColor: props.alertData.type === 'software' ? 'red' : 'green',
-  border: '1px solid #e0e0e0',
-  borderRadius: '4px',
-  boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-  display: 'flex',
-  flexDirection: 'column',
-  marginBottom: '1rem',
-  position: 'relative',
-  width: '100%'
-}));
+const StyliedListItem = styled(ListItem, {
+  shouldForwardProp: (prop) => prop !== 'alertData'
+})(
+  // @ts-ignore
+  ({ theme, alertData }) => ({
+    backgroundColor: alertData.isPrediction
+      ? 'white'
+      : severityBackgroundColor(alertData.severity),
+    color: alertData.isPrediction
+      ? 'black'
+      : theme.palette.getContrastText(
+          severityBackgroundColor(alertData.severity)
+        ),
+    // alertData.severity === 5 || alertData.severity === 4 ? 'white' : 'black',
+    padding: theme.spacing(2.5),
+    paddingLeft: theme.spacing(15),
+    border: '1px solid lightgray',
+    lineHeight: '1.5em'
+  })
+);
 
 const Notification = (props) => {
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const theme = useTheme();
   return (
-    <StyliedListItem alertData={props.alertData} theme={theme}>
-      <Typography variant="h5" component="h2">
-        {props.alertData.title}
-      </Typography>
-      <p> prediction:{props.alertData.isPrediction} </p>
-      <p>{props.alertData.severity}</p>
-      <p>{props.alertData.type}</p>
-    </StyliedListItem>
+    <>
+      <StyliedListItem
+        // @ts-ignore
+        alertData={props.alertData}
+        theme={theme}
+        onClick={handleOpen}
+      >
+        {(props.alertData.severity > 3 && !props.alertData.isPrediction && (
+          <ReportProblemIcon fontSize="large" />
+        )) || <Icon />}
+        <TypeIcons type={props.alertData.type} />
+        <Typography variant="h5" component="h2">
+          {props.alertData.title}
+        </Typography>
+      </StyliedListItem>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={open}
+        onClose={handleClose}
+      >
+        <Fade in={open}>
+          <Box bgcolor="white" sx={{ p: 2, margin: 'auto', width: '50%' }}>
+            <VisualSeverity severity={props.alertData.severity} />
+            <Typography variant="h5" component="h2">
+              {props.alertData.title}
+            </Typography>
+          </Box>
+        </Fade>
+      </Modal>
+    </>
   );
 };
 

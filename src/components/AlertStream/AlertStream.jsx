@@ -24,9 +24,12 @@ import { styled } from '@mui/material/styles';
 const StyledAlertItems = styled('ul')(({ theme }) => ({
   listStyle: 'none',
   margin: 'auto',
-  padding: 0,
+  padding: '10px',
   width: '100%',
-  maxWidth: theme.breakpoints.values.md
+  maxWidth: theme.breakpoints.values.md,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(1)
 }));
 
 const AlertStream = ({ data }) => (
