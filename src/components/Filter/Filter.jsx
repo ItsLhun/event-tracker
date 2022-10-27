@@ -4,6 +4,7 @@ import {
   Checkbox,
   FormControlLabel,
   FormGroup,
+  TextField,
   Typography
 } from '@mui/material';
 import { useItems } from 'contexts/ItemsContext';
@@ -19,8 +20,11 @@ import Constants from '../../Constants';
 const Filter = (props) => {
   const { handleApplyFilters } = useItems();
   const [typesChecked, setTypesChecked] = React.useState([]);
+  const [severitiesChecked, setSeveritiesChecked] = React.useState([]);
+  const [predictionsChecked, setPredictionsChecked] = React.useState([]);
+  const [freeSearch, setFreeSearch] = React.useState('');
 
-  const handleToggle = (value) => () => {
+  const handleTypesToggle = (value) => () => {
     const currentIndex = typesChecked.indexOf(value);
     const newChecked = [...typesChecked];
 
@@ -33,6 +37,19 @@ const Filter = (props) => {
     setTypesChecked(newChecked);
   };
 
+  const handleSeveritiesToggle = (value) => () => {
+    const currentIndex = severitiesChecked.indexOf(value);
+    const newChecked = [...severitiesChecked];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    setSeveritiesChecked(newChecked);
+  };
+
   return (
     <Box
       bgcolor={'white'}
@@ -41,55 +58,69 @@ const Filter = (props) => {
       width={'100%'}
       maxWidth={'700px'}
     >
-      {/* Checkbox out of the three types */}
-      <Typography variant="h5">Types</Typography>
-      <FormGroup row>
-        {Constants.ALERTS.map((type) => (
-          <FormControlLabel
-            key={type}
-            control={<Checkbox checked={typesChecked.indexOf(type) !== -1} />}
-            label={capitalizeFirstLetter(type)}
-            onClick={handleToggle(type)}
-          />
-        ))}
-      </FormGroup>
-
-      {/* <Typography variant="h5">Severity</Typography> */}
-      {/* <FormGroup row>
-        <FormControlLabel
-          control={<Checkbox />}
-          label={Constants.SEVERITY[0]}
-          value={Constants.SEVERITY[0]}
+      {/* Types */}
+      <Box>
+        <Typography variant="h5">Types</Typography>
+        <FormGroup row>
+          {Constants.ALERTS.map((type) => (
+            <FormControlLabel
+              key={type}
+              control={<Checkbox checked={typesChecked.indexOf(type) !== -1} />}
+              label={capitalizeFirstLetter(type)}
+              onClick={handleTypesToggle(type)}
+            />
+          ))}
+        </FormGroup>
+      </Box>
+      {/* Severities */}
+      <Box>
+        <Typography variant="h5">Severity</Typography>
+        <FormGroup row>
+          {Constants.SEVERITY.map((severity) => (
+            <FormControlLabel
+              key={severity}
+              control={
+                <Checkbox
+                  checked={severitiesChecked.indexOf(severity) !== -1}
+                />
+              }
+              label={severity}
+              onClick={handleSeveritiesToggle(severity)}
+            />
+          ))}
+        </FormGroup>
+      </Box>
+      {/* Search by text */}
+      <Box>
+        <Typography variant="h5">Free text</Typography>
+        <TextField
+          value={freeSearch}
+          onChange={(e) => setFreeSearch(e.target.value)}
         />
-        <FormControlLabel
-          control={<Checkbox />}
-          label={Constants.SEVERITY[1]}
-          value={Constants.SEVERITY[1]}
-        />
-        <FormControlLabel
-          control={<Checkbox />}
-          label={Constants.SEVERITY[2]}
-          value={Constants.SEVERITY[2]}
-        />
-        <FormControlLabel
-          control={<Checkbox />}
-          label={Constants.SEVERITY[3]}
-          value={Constants.SEVERITY[3]}
-        />
-        <FormControlLabel
-          control={<Checkbox />}
-          label={Constants.SEVERITY[4]}
-          value={Constants.SEVERITY[4]}
-        />
-      </FormGroup> */}
+      </Box>
       <Button
         variant="contained"
         onClick={() => {
           console.log('typesChecked', typesChecked);
-          handleApplyFilters(typesChecked, []);
+          handleApplyFilters(
+            typesChecked,
+            severitiesChecked,
+            freeSearch.toLowerCase()
+          );
         }}
       >
         Apply
+      </Button>
+      <Button
+        variant="contained"
+        onClick={() => {
+          setTypesChecked([]);
+          setSeveritiesChecked([]);
+          setFreeSearch('');
+          handleApplyFilters([], [], '');
+        }}
+      >
+        Clear
       </Button>
     </Box>
   );

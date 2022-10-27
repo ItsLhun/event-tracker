@@ -1,5 +1,8 @@
 import React from 'react';
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
+import PersonIcon from '@mui/icons-material/Person';
+import WebhookIcon from '@mui/icons-material/Webhook';
+import { Icon } from '@mui/material';
 
 /**
  * Given a type between "human", "mechanical", and "software", return the
@@ -10,13 +13,13 @@ const TypeIcons = (props) => {
   const getElement = () => {
     switch (type) {
       case 'human':
-        return <PrecisionManufacturingIcon fontSize={'large'} />;
+        return <PersonIcon fontSize={'large'} />;
       case 'mechanical':
         return <PrecisionManufacturingIcon fontSize={'large'} />;
       case 'software':
-        return <PrecisionManufacturingIcon fontSize={'large'} />;
+        return <WebhookIcon fontSize={'large'} />;
       default:
-        return <PrecisionManufacturingIcon fontSize={'large'} />;
+        return <Icon />;
     }
   };
   let returnElement = getElement();

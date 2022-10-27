@@ -26,8 +26,7 @@ export const ItemsProvider = (props) => {
     severity: [],
     type: [],
     isPrediction: [],
-    title: '',
-    description: ''
+    freeText: ''
   });
 
   const interval = useRef(null);
@@ -75,25 +74,48 @@ export const ItemsProvider = (props) => {
     );
   };
 
+  // Apply freeSearch string to both title and description
+  const handleFreeSearchFilter = (freeSearch, workingItems) => {
+    if (freeSearch === '') {
+      return workingItems;
+    }
+    return workingItems.filter((item) => {
+      const title = item.title.toLowerCase();
+      const description = item.description.toLowerCase();
+      return title.includes(freeSearch) || description.includes(freeSearch);
+    });
+  };
+
   // Apply the selected filters
-  const handleApplyFilters = async (selectedTypes, selectedSeverities) => {
+  const handleApplyFilters = (
+    selectedTypes,
+    selectedSeverities,
+    freeSearch
+  ) => {
     const workingItems = items;
     const filteredItems = handleTypeFilter(selectedTypes, workingItems);
     const filteredItems2 = handleSeverityFilter(
       selectedSeverities,
       filteredItems
     );
-    setDisplayedItems(filteredItems2);
+    const filteredItems3 = handleFreeSearchFilter(freeSearch, filteredItems2);
+
+    setDisplayedItems(filteredItems3);
     const newFilters = {
       ...activeFilters,
       severity: selectedSeverities,
-      type: selectedTypes
+      type: selectedTypes,
+      freeText: freeSearch
     };
     setActiveFilters(newFilters);
   };
 
   useEffect(() => {
-    handleApplyFilters(activeFilters.type, activeFilters.severity);
+    handleApplyFilters(
+      activeFilters.type,
+      activeFilters.severity,
+      activeFilters.freeText
+    );
   }, [items]);
 
   // Add new item to items array

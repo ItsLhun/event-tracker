@@ -1,9 +1,8 @@
 import {
-  Backdrop,
   Box,
+  Button,
   Fade,
   Icon,
-  IconButton,
   ListItem,
   Modal,
   styled,
@@ -49,7 +48,7 @@ const StyliedListItem = styled(ListItem, {
         ),
     // alertData.severity === 5 || alertData.severity === 4 ? 'white' : 'black',
     padding: theme.spacing(2.5),
-    paddingLeft: theme.spacing(15),
+    paddingLeft: theme.spacing(2),
     border: '1px solid lightgray',
     lineHeight: '1.5em'
   })
@@ -75,11 +74,11 @@ const Notification = (props) => {
         theme={theme}
         onClick={handleOpen}
       >
+        <TypeIcons type={props.alertData.type} />
         {(props.alertData.severity > 3 && !props.alertData.isPrediction && (
           <ReportProblemIcon fontSize="large" />
         )) || <Icon />}
-        {props.alertData.type}
-        {/* <TypeIcons type={props.alertData.type} /> */}
+        {props.alertData.severity}
         <Typography variant="h5" component="h2">
           {props.alertData.title}
         </Typography>
@@ -94,8 +93,12 @@ const Notification = (props) => {
           <Box bgcolor="white" sx={{ p: 2, margin: 'auto', width: '50%' }}>
             <VisualSeverity severity={props.alertData.severity} />
             <Typography variant="h5" component="h2">
-              {props.alertData.title}
+              Title: {props.alertData.title}
             </Typography>
+            <Typography variant="body1" component="p">
+              Description: {props.alertData.description}
+            </Typography>
+            <Button>Discard</Button>
           </Box>
         </Fade>
       </Modal>
