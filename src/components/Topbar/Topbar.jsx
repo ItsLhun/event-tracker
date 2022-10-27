@@ -1,133 +1,127 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import FilterListIcon from '@mui/icons-material/FilterList';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import StopCircleIcon from '@mui/icons-material/StopCircle';
 import ClearIcon from '@mui/icons-material/Clear';
-
+import AdbIcon from '@mui/icons-material/Adb';
 import { styled } from '@mui/material/styles';
 import { Box } from '@mui/system';
-import { createAlertStream } from 'utils';
 import {
   AppBar,
   Button,
-  CardContent,
   Collapse,
-  IconButton
+  IconButton,
+  Typography
 } from '@mui/material';
-
-// you may decrease this if you're feeling brave!
-const INTERVAL_DURATION = 1000;
-
-// Topbar using Material UI
+import Filter from 'components/Filter/Filter';
+import { useItems } from 'contexts/ItemsContext';
 
 const TopbarStyles = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
   position: 'relative'
 }));
 
-const ToggleButtonStyled = styled(Button)(({ theme }) => ({
-  color: theme.palette.primary.contrastText,
-  backgroundColor: 'black'
+const StyledBox = styled(Box)(({ theme }) => ({
+  maxWidth: theme.breakpoints.values.md,
+  width: '100%',
+  justifyContent: 'space-between'
 }));
 
 const Topbar = (props) => {
-  const [value, setValue] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
-  const interval = useRef(null);
+  const {
+    items,
+    displayedItems,
+    handleStartTapped,
+    handleStopTapped,
+    handleClearTapped,
+    isRunning
+  } = useItems();
   const [expanded, setExpanded] = React.useState(false);
-
-  // clear the alert stream
-  function handleClearTapped() {
-    props.setItems([]);
-  }
-
-  // start the alert stream
-  function handleStartTapped() {
-    if (!interval.current) {
-      setIsRunning(true);
-      interval.current = createAlertStream({
-        onNewAlert: props.setItems,
-        intervalDuration: INTERVAL_DURATION
-      });
-    }
-  }
-
-  // stop the alert stream
-  function handleStopTapped() {
-    if (interval.current) {
-      interval.current();
-      interval.current = null;
-      setIsRunning(false);
-    }
-  }
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-  // start the alert stream on mount
-  useEffect(() => {
-    if (!interval.current) {
-      interval.current = createAlertStream({
-        onNewAlert: props.setItems,
-        intervalDuration: INTERVAL_DURATION
-      });
-      setIsRunning(true);
-    }
-  }, []);
-
   return (
     <TopbarStyles>
-      <Box>
-        <IconButton
-          size="large"
-          edge="start"
-          color="inherit"
-          sx={{ mr: 2 }}
-          aria-label="start"
-          disabled={isRunning}
-          onClick={handleStartTapped}
-        >
-          <PlayCircleOutlineIcon /> Start
-        </IconButton>
-        <IconButton
-          size="large"
-          edge="start"
-          color="inherit"
-          sx={{ mr: 2 }}
-          aria-label="stop"
-          disabled={!isRunning}
-          onClick={handleStopTapped}
-        >
-          <StopCircleIcon /> Stop
-        </IconButton>
-        <IconButton
-          size="large"
-          edge="start"
-          color="inherit"
-          sx={{ mr: 2 }}
-          aria-label="clear"
-          disabled={!props.items.length}
-          onClick={handleClearTapped}
-        >
-          <ClearIcon /> Clear
-        </IconButton>
-      </Box>
-      <IconButton
-        size="large"
-        edge="start"
-        color="inherit"
-        sx={{ mr: 2 }}
-        onClick={handleExpandClick}
-        aria-expanded={expanded}
-        aria-label="filter"
+      <StyledBox
+        width={'700px'}
+        mx={'auto'}
+        display={'flex'}
+        alignItems={'center'}
       >
-        <FilterListIcon />
-      </IconButton>
-
+        <Box display={'flex'} flexDirection={'row'}>
+          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            href="/"
+            sx={{
+              mr: 2,
+              display: { xs: 'none', md: 'flex' },
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none'
+            }}
+          >
+            LOGO
+          </Typography>
+        </Box>
+        <Box display={'flex'} flexDirection={'row'}>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            sx={{ mr: 2 }}
+            aria-label="start"
+            disabled={isRunning}
+            onClick={handleStartTapped}
+          >
+            <PlayCircleOutlineIcon />
+          </IconButton>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            sx={{ mr: 2 }}
+            aria-label="stop"
+            disabled={!isRunning}
+            onClick={handleStopTapped}
+          >
+            <StopCircleIcon />
+          </IconButton>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            sx={{ mr: 2 }}
+            aria-label="clear"
+            disabled={!items.length}
+            onClick={handleClearTapped}
+          >
+            <ClearIcon />
+          </IconButton>
+        </Box>
+        <IconButton
+          size="large"
+          edge="start"
+          color="inherit"
+          sx={{ mr: 2 }}
+          onClick={handleExpandClick}
+          aria-expanded={expanded}
+          aria-label="filter"
+        >
+          <FilterListIcon />
+        </IconButton>
+      </StyledBox>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>lorem ipsum</CardContent>
+        <Filter>lorem ipsum</Filter>
+        {'Items length: ' + items.length}
+        {'Displayed items length: ' + displayedItems.length}
       </Collapse>
     </TopbarStyles>
   );

@@ -20,13 +20,7 @@ export const createAlertStream = ({ onNewAlert, intervalDuration }) => {
   const interval = setInterval(() => {
     const newItem = createNewAlert();
     if (onNewAlert && typeof onNewAlert === 'function') {
-      onNewAlert((items) => {
-        if (items.length < 20) {
-          return [...items, newItem];
-        } else {
-          return [newItem];
-        }
-      });
+      onNewAlert(newItem);
     }
   }, intervalDuration);
   return () => clearInterval(interval);
@@ -35,4 +29,8 @@ export const createAlertStream = ({ onNewAlert, intervalDuration }) => {
 // Takes a date and returns a string in the format of "HH:MM:SS"
 export const formatTime = (date) => {
   return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+};
+
+export const capitalizeFirstLetter = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 };

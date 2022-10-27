@@ -78,7 +78,8 @@ const Notification = (props) => {
         {(props.alertData.severity > 3 && !props.alertData.isPrediction && (
           <ReportProblemIcon fontSize="large" />
         )) || <Icon />}
-        <TypeIcons type={props.alertData.type} />
+        {props.alertData.type}
+        {/* <TypeIcons type={props.alertData.type} /> */}
         <Typography variant="h5" component="h2">
           {props.alertData.title}
         </Typography>
