@@ -110,6 +110,15 @@ export const ItemsProvider = (props) => {
     setActiveFilters(newFilters);
   };
 
+  const handleDiscardOrCompleteItem = (item, mode) => {
+    // add property 'reason' to item
+    const newItem = { ...item, reason: mode };
+    const newDiscardedItems = [...discardedItems, newItem];
+    setDiscardedItems(newDiscardedItems);
+    const newItems = items.filter((i) => i.key !== item.key);
+    setItems(newItems);
+  };
+
   useEffect(() => {
     handleApplyFilters(
       activeFilters.type,
@@ -147,7 +156,8 @@ export const ItemsProvider = (props) => {
         setDisplayedItems,
         setDiscardedItems,
         handleApplyFilters,
-        activeFilters
+        activeFilters,
+        handleDiscardOrCompleteItem
       }}
     >
       {props.children}

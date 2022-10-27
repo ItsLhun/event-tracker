@@ -14,13 +14,17 @@ const StyledAlertItems = styled('ul')(({ theme }) => ({
   gap: theme.spacing(1)
 }));
 
-const AlertStream = () => {
-  const { displayedItems } = useItems();
+const AlertStream = (props) => {
+  const { displayedItems, discardedItems } = useItems();
   return (
     <StyledAlertItems>
-      {displayedItems.map((item) => (
-        <AlertItem key={item.key} alertData={item} />
-      ))}
+      {props.history
+        ? discardedItems.map((item) => (
+            <AlertItem key={item.key} alertData={item} />
+          ))
+        : displayedItems.map((item) => (
+            <AlertItem key={item.key} alertData={item} />
+          ))}
     </StyledAlertItems>
   );
 };

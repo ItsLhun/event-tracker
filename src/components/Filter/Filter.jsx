@@ -4,6 +4,7 @@ import {
   Checkbox,
   FormControlLabel,
   FormGroup,
+  styled,
   TextField,
   Typography
 } from '@mui/material';
@@ -11,6 +12,15 @@ import { useItems } from 'contexts/ItemsContext';
 import React from 'react';
 import { capitalizeFirstLetter } from 'utils';
 import Constants from '../../Constants';
+
+const StyledContainerBox = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
+  color: theme.palette.text.primary,
+  padding: theme.spacing(2),
+  width: '100%',
+  maxWidth: theme.breakpoints.values.md,
+  margin: 'auto'
+}));
 
 /**
  * Filter
@@ -51,13 +61,7 @@ const Filter = (props) => {
   };
 
   return (
-    <Box
-      bgcolor={'white'}
-      p={2}
-      color={'black'}
-      width={'100%'}
-      maxWidth={'700px'}
-    >
+    <StyledContainerBox>
       {/* Types */}
       <Box>
         <Typography variant="h5">Types</Typography>
@@ -122,7 +126,7 @@ const Filter = (props) => {
       >
         Clear
       </Button>
-    </Box>
+    </StyledContainerBox>
   );
 };
 

@@ -13,6 +13,7 @@ import VisualSeverity from 'components/VisualSeverity/VisualSeverity';
 import React from 'react';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import TypeIcons from 'components/TypeIcons/TypeIcons';
+import { useItems } from 'contexts/ItemsContext';
 
 // IBM severity levels
 // https://www.color-hex.com/color-palette/33993
@@ -55,6 +56,7 @@ const StyliedListItem = styled(ListItem, {
 );
 
 const Notification = (props) => {
+  const { handleDiscardOrCompleteItem } = useItems();
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
@@ -98,7 +100,16 @@ const Notification = (props) => {
             <Typography variant="body1" component="p">
               Description: {props.alertData.description}
             </Typography>
-            <Button>Discard</Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => {
+                handleDiscardOrCompleteItem(props.alertData, 'Discard');
+                handleClose();
+              }}
+            >
+              Discard
+            </Button>
           </Box>
         </Fade>
       </Modal>

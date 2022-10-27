@@ -4,6 +4,7 @@ import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import HomeIcon from '@mui/icons-material/Home';
 import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 // Navbar using Material UI
 
@@ -23,6 +24,7 @@ const ActionStyles = styled(BottomNavigationAction)(({ theme }) => ({
 
 const Navbar = (props) => {
   const [value, setValue] = React.useState(0);
+  const navigation = useNavigate();
 
   return (
     <NavbarStyles
@@ -32,8 +34,17 @@ const Navbar = (props) => {
         setValue(newValue);
       }}
     >
-      <ActionStyles label="Home" icon={<HomeIcon />} />
-      <ActionStyles label="History" icon={<ManageHistoryIcon />} />
+      <ActionStyles
+        label="Home"
+        icon={<HomeIcon />}
+        onClick={() => navigation('/')}
+      />
+
+      <ActionStyles
+        label="History"
+        icon={<ManageHistoryIcon />}
+        onClick={() => navigation('/history')}
+      />
     </NavbarStyles>
   );
 };
