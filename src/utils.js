@@ -31,6 +31,43 @@ export const formatTime = (date) => {
   return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 };
 
+// Takes a date and returns a string in the format of "MM/DD/YYYY"
+export const formatDate = (date) => {
+  return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+};
+
+// Takes a date and returns a string in the format of "MM/DD/YYYY HH:MM:SS"
+export const formatDateTime = (date) => {
+  return `${formatDate(date)} - ${formatTime(date)}`;
+};
+
 export const capitalizeFirstLetter = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
+// IBM severity levels
+// https://www.color-hex.com/color-palette/33993
+export const severityBackgroundColor = (severity) => {
+  switch (severity) {
+    case 1:
+      return '#00ac46';
+    case 2:
+      return '#fdc500';
+    case 3:
+      return '#fd8c00';
+    case 4:
+      return '#dc0000';
+    case 5:
+      return '#780000';
+    default:
+      return '#780000';
+  }
+};
+
+export const isArray = (a) => {
+  return !!a && a.constructor === Array;
+};
+
+export const getPercentageOfConfidence = (confidence) => {
+  return `${confidence}%`;
 };

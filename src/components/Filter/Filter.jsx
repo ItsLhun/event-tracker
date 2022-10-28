@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Checkbox,
+  Divider,
   FormControlLabel,
   FormGroup,
   styled,
@@ -19,7 +20,10 @@ const StyledContainerBox = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
   width: '100%',
   maxWidth: theme.breakpoints.values.md,
-  margin: 'auto'
+  margin: 'auto',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(1)
 }));
 
 /**
@@ -60,39 +64,74 @@ const Filter = (props) => {
     setSeveritiesChecked(newChecked);
   };
 
+  const handlePredictionsToggle = (value) => () => {
+    const currentIndex = predictionsChecked.indexOf(value);
+    const newChecked = [...predictionsChecked];
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+    setPredictionsChecked(newChecked);
+  };
+
   return (
     <StyledContainerBox>
-      {/* Types */}
-      <Box>
-        <Typography variant="h5">Types</Typography>
-        <FormGroup row>
-          {Constants.ALERTS.map((type) => (
-            <FormControlLabel
-              key={type}
-              control={<Checkbox checked={typesChecked.indexOf(type) !== -1} />}
-              label={capitalizeFirstLetter(type)}
-              onClick={handleTypesToggle(type)}
-            />
-          ))}
-        </FormGroup>
-      </Box>
-      {/* Severities */}
-      <Box>
-        <Typography variant="h5">Severity</Typography>
-        <FormGroup row>
-          {Constants.SEVERITY.map((severity) => (
-            <FormControlLabel
-              key={severity}
-              control={
-                <Checkbox
-                  checked={severitiesChecked.indexOf(severity) !== -1}
-                />
-              }
-              label={severity}
-              onClick={handleSeveritiesToggle(severity)}
-            />
-          ))}
-        </FormGroup>
+      <Typography variant="h3" component="h1" letterSpacing={'0.3rem'}>
+        Filter
+      </Typography>
+      <Divider sx={{ mb: 2 }} />
+      <Box display={'flex'} flexDirection={'row'} gap={1} flexWrap={'wrap'}>
+        {/* Types */}
+        <Box marginRight={1}>
+          <Typography variant="h5">Types</Typography>
+          <FormGroup row>
+            {Constants.ALERTS.map((type) => (
+              <FormControlLabel
+                key={type}
+                control={
+                  <Checkbox checked={typesChecked.indexOf(type) !== -1} />
+                }
+                label={capitalizeFirstLetter(type)}
+                onClick={handleTypesToggle(type)}
+              />
+            ))}
+          </FormGroup>
+        </Box>
+        {/* Prediction */}
+        <Box marginRight={1}>
+          <Typography variant="h5">Prediction status</Typography>
+          <FormGroup row>
+            {Constants.PREDICTIONS.map((type) => (
+              <FormControlLabel
+                key={type}
+                control={
+                  <Checkbox checked={predictionsChecked.indexOf(type) !== -1} />
+                }
+                label={capitalizeFirstLetter(type)}
+                onClick={handlePredictionsToggle(type)}
+              />
+            ))}
+          </FormGroup>
+        </Box>
+        {/* Severities */}
+        <Box marginRight={1}>
+          <Typography variant="h5">Severity</Typography>
+          <FormGroup row>
+            {Constants.SEVERITY.map((severity) => (
+              <FormControlLabel
+                key={severity}
+                control={
+                  <Checkbox
+                    checked={severitiesChecked.indexOf(severity) !== -1}
+                  />
+                }
+                label={severity}
+                onClick={handleSeveritiesToggle(severity)}
+              />
+            ))}
+          </FormGroup>
+        </Box>
       </Box>
       {/* Search by text */}
       <Box>
@@ -100,32 +139,39 @@ const Filter = (props) => {
         <TextField
           value={freeSearch}
           onChange={(e) => setFreeSearch(e.target.value)}
+          fullWidth
+          label="Search..."
+          placeholder="Search..."
+          margin="normal"
         />
       </Box>
-      <Button
-        variant="contained"
-        onClick={() => {
-          console.log('typesChecked', typesChecked);
-          handleApplyFilters(
-            typesChecked,
-            severitiesChecked,
-            freeSearch.toLowerCase()
-          );
-        }}
-      >
-        Apply
-      </Button>
-      <Button
-        variant="contained"
-        onClick={() => {
-          setTypesChecked([]);
-          setSeveritiesChecked([]);
-          setFreeSearch('');
-          handleApplyFilters([], [], '');
-        }}
-      >
-        Clear
-      </Button>
+      <Box width="100%" display="flex" justifyContent="flex-end">
+        <Button
+          variant="contained"
+          onClick={() => {
+            handleApplyFilters(
+              typesChecked,
+              severitiesChecked,
+              freeSearch.toLowerCase(),
+              predictionsChecked
+            );
+          }}
+          sx={{ mx: 2 }}
+        >
+          Apply
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => {
+            setTypesChecked([]);
+            setSeveritiesChecked([]);
+            setFreeSearch('');
+            handleApplyFilters([], [], '', []);
+          }}
+        >
+          Clear
+        </Button>
+      </Box>
     </StyledContainerBox>
   );
 };

@@ -14,13 +14,18 @@ const theme = createTheme({
     },
 
     error: {
-      main: red.A400
+      main: red.A400,
+      contrastText: '#FFF',
+      dark: red[700]
     },
     success: {
-      main: green[500]
+      main: green[500],
+      contrastText: '#FFF',
+      dark: green[700]
     },
     warning: {
-      main: orange[500]
+      main: orange[500],
+      contrastText: '#FFF'
     },
     background: {
       default: '#fff',

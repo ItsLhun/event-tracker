@@ -19,7 +19,7 @@ const TypeIcons = (props) => {
       case 'software':
         return <WebhookIcon fontSize={'large'} />;
       default:
-        return <Icon />;
+        return <Icon fontSize={'large'} />;
     }
   };
   let returnElement = getElement();

@@ -1,38 +1,14 @@
-import {
-  Box,
-  Button,
-  Fade,
-  Icon,
-  ListItem,
-  Modal,
-  styled,
-  Typography,
-  useTheme
-} from '@mui/material';
-import VisualSeverity from 'components/VisualSeverity/VisualSeverity';
+import { Icon, ListItem, styled, Typography, useTheme } from '@mui/material';
 import React from 'react';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import TypeIcons from 'components/TypeIcons/TypeIcons';
 import { useItems } from 'contexts/ItemsContext';
-
-// IBM severity levels
-// https://www.color-hex.com/color-palette/33993
-const severityBackgroundColor = (severity) => {
-  switch (severity) {
-    case 1:
-      return '#00ac46';
-    case 2:
-      return '#fdc500';
-    case 3:
-      return '#fd8c00';
-    case 4:
-      return '#dc0000';
-    case 5:
-      return '#780000';
-    default:
-      return '#780000';
-  }
-};
+import AlertItemModal from 'components/AlertItemModal/AlertItemModal';
+import Reasonbox from 'components/ReasonBox/Reasonbox';
+import BatchPredictionIcon from '@mui/icons-material/BatchPrediction';
+import { Box } from '@mui/system';
+import PredictionSeverityLines from 'components/PredictionSeverityLine/PredictionSeverityLines';
+import { severityBackgroundColor } from 'utils';
 
 const StyliedListItem = styled(ListItem, {
   shouldForwardProp: (prop) => prop !== 'alertData'
@@ -47,11 +23,14 @@ const StyliedListItem = styled(ListItem, {
       : theme.palette.getContrastText(
           severityBackgroundColor(alertData.severity)
         ),
-    // alertData.severity === 5 || alertData.severity === 4 ? 'white' : 'black',
     padding: theme.spacing(2.5),
     paddingLeft: theme.spacing(2),
     border: '1px solid lightgray',
-    lineHeight: '1.5em'
+    lineHeight: '1.5em',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start'
   })
 );
 
@@ -71,48 +50,44 @@ const Notification = (props) => {
   return (
     <>
       <StyliedListItem
-        // @ts-ignore
         alertData={props.alertData}
         theme={theme}
         onClick={handleOpen}
       >
-        <TypeIcons type={props.alertData.type} />
-        {(props.alertData.severity > 3 && !props.alertData.isPrediction && (
-          <ReportProblemIcon fontSize="large" />
-        )) || <Icon />}
-        {props.alertData.severity}
+        <PredictionSeverityLines severity={props.alertData.severity} />
+
+        {/* Icons start */}
+        <Box display="flex" flexDirection="row" gap={theme.spacing(1)} mr={2}>
+          <TypeIcons type={props.alertData.type} />
+          {(props.alertData.severity > 3 && !props.alertData.isPrediction && (
+            <ReportProblemIcon fontSize="large" />
+          )) || <Icon fontSize={'large'} />}
+        </Box>
         <Typography variant="h5" component="h2">
           {props.alertData.title}
         </Typography>
+        {/* Icons end */}
+        <Box
+          alignSelf={'flex-end'}
+          marginLeft={'auto'}
+          display="flex"
+          flexDirection="row"
+          gap={theme.spacing(1)}
+        >
+          {props.alertData.isPrediction && (
+            <BatchPredictionIcon fontSize="large" />
+          )}
+          {props.alertData.reason && (
+            <Reasonbox reason={props.alertData.reason} />
+          )}
+        </Box>
       </StyliedListItem>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
+      <AlertItemModal
         open={open}
-        onClose={handleClose}
-      >
-        <Fade in={open}>
-          <Box bgcolor="white" sx={{ p: 2, margin: 'auto', width: '50%' }}>
-            <VisualSeverity severity={props.alertData.severity} />
-            <Typography variant="h5" component="h2">
-              Title: {props.alertData.title}
-            </Typography>
-            <Typography variant="body1" component="p">
-              Description: {props.alertData.description}
-            </Typography>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                handleDiscardOrCompleteItem(props.alertData, 'Discard');
-                handleClose();
-              }}
-            >
-              Discard
-            </Button>
-          </Box>
-        </Fade>
-      </Modal>
+        alertData={props.alertData}
+        handleClose={handleClose}
+        handleDiscardOrCompleteItem={handleDiscardOrCompleteItem}
+      />
     </>
   );
 };

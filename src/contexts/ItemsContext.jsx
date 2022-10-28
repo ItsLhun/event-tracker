@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState
 } from 'react';
-import { createAlertStream } from 'utils';
+import { createAlertStream, isArray } from 'utils';
 
 // create a context
 const ItemsContext = createContext(null);
@@ -25,7 +25,7 @@ export const ItemsProvider = (props) => {
   const [activeFilters, setActiveFilters] = useState({
     severity: [],
     type: [],
-    isPrediction: [],
+    predictions: [],
     freeText: ''
   });
 
@@ -86,11 +86,29 @@ export const ItemsProvider = (props) => {
     });
   };
 
+  /**
+   * May contain "prediction" "real" or both
+   */
+  const handlePredictionFilter = (selectedPredictions, workingItems) => {
+    let usedSelectedPredictions = isArray(selectedPredictions)
+      ? selectedPredictions
+      : [];
+    if (usedSelectedPredictions.length === 0) {
+      return workingItems;
+    }
+    return workingItems.filter((item) =>
+      usedSelectedPredictions.includes(
+        item.isPrediction ? 'prediction' : 'real'
+      )
+    );
+  };
+
   // Apply the selected filters
   const handleApplyFilters = (
     selectedTypes,
     selectedSeverities,
-    freeSearch
+    freeSearch,
+    selectedPredictions
   ) => {
     const workingItems = items;
     const filteredItems = handleTypeFilter(selectedTypes, workingItems);
@@ -99,13 +117,18 @@ export const ItemsProvider = (props) => {
       filteredItems
     );
     const filteredItems3 = handleFreeSearchFilter(freeSearch, filteredItems2);
+    const filteredItems4 = handlePredictionFilter(
+      selectedPredictions,
+      filteredItems3
+    );
 
-    setDisplayedItems(filteredItems3);
+    setDisplayedItems(filteredItems4);
     const newFilters = {
       ...activeFilters,
       severity: selectedSeverities,
       type: selectedTypes,
-      freeText: freeSearch
+      freeText: freeSearch,
+      predictions: selectedPredictions
     };
     setActiveFilters(newFilters);
   };
@@ -119,18 +142,25 @@ export const ItemsProvider = (props) => {
     setItems(newItems);
   };
 
+  // Add new item to items array
+  const handleAddItem = async (item) => {
+    setItems((prev) => {
+      if (prev.length >= Constants.MAX_ITEMS) {
+        return prev;
+      } else {
+        return [...prev, item];
+      }
+    });
+  };
+
   useEffect(() => {
     handleApplyFilters(
       activeFilters.type,
       activeFilters.severity,
-      activeFilters.freeText
+      activeFilters.freeText,
+      activeFilters.predictions
     );
   }, [items]);
-
-  // Add new item to items array
-  const handleAddItem = async (item) => {
-    setItems((prev) => [item, ...prev]);
-  };
 
   // start the alert stream on mount
   useEffect(() => {

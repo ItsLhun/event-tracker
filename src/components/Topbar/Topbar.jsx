@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-
+import React from 'react';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import StopCircleIcon from '@mui/icons-material/StopCircle';
@@ -46,14 +45,14 @@ const Topbar = (props) => {
         justifyContent={'space-between'}
       >
         <Box display={'flex'} flexDirection={'row'}>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <AdbIcon sx={{ mx: 1 }} />
           <Typography
             variant="h6"
             noWrap
             component="a"
             href="/"
             sx={{
-              display: { xs: 'none', md: 'flex' },
+              display: { xs: 'none', sm: 'flex' },
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
@@ -67,7 +66,6 @@ const Topbar = (props) => {
         <Box
           display={'flex'}
           flexDirection={'row'}
-          bgcolor={'red'}
           justifyContent={'space-between'}
           p={1}
           alignSelf={'center'}
@@ -111,6 +109,7 @@ const Topbar = (props) => {
           >
             <Typography
               sx={{
+                display: { xs: 'none', sm: 'unset' },
                 mr: 2,
                 fontFamily: 'monospace',
                 fontWeight: 700,
@@ -127,8 +126,14 @@ const Topbar = (props) => {
       </StyledBox>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <Filter>lorem ipsum</Filter>
-        {'Items length: ' + items.length}
-        {'Displayed items length: ' + displayedItems.length}
+        <Box marginLeft={2}>
+          <Typography variant="body2">
+            {'Total pending items: ' + items.length}
+          </Typography>
+          <Typography variant="body2">
+            {'Displayed items length: ' + displayedItems.length}
+          </Typography>
+        </Box>
       </Collapse>
     </TopbarStyles>
   );
