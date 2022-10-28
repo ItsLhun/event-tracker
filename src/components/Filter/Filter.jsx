@@ -166,6 +166,7 @@ const Filter = (props) => {
             setTypesChecked([]);
             setSeveritiesChecked([]);
             setFreeSearch('');
+            setPredictionsChecked([]);
             handleApplyFilters([], [], '', []);
           }}
         >
