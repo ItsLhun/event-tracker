@@ -14,4 +14,4 @@ The alert data is generated using the Chance library, and has a schema as follow
 }
 ```
 
-/
+
