@@ -1,5 +1,5 @@
 
-# Event tracker (**Notifica**)
+# **Notifica** (Event tracker)
 
 Live deployment: https://notifica-engineering.netlify.app/
 
