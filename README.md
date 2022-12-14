@@ -1,5 +1,5 @@
 
-# Event tracker
+# Event tracker (**Notifica**)
 
 Live deployment: https://notifica-engineering.netlify.app/
 
@@ -7,10 +7,10 @@ Live deployment: https://notifica-engineering.netlify.app/
 
 ## Description
 
-_**Notifica**_ is a platform that simulates how an engineering environment might receive and handle quickly incoming notifications, the goal is to provide a **visual** feedback to the operator so they can quickly choose where their attention is needed the most. 
+_**Notifica**_ is a platform that simulates how an engineering environment might receive and handle quickly-incoming notifications on the go, thus, the app is explicitel made with a mobile-first perspective. The goal is to provide a **visual** feedback to the operator so they can quickly choose where their attention is needed the most. 
 
 
-![image example](img)
+![image example](https://user-images.githubusercontent.com/66971876/207643635-41e2bba3-1aec-4a49-92d1-6c75ec32b4a4.gif)
 
 ## Tools
 
